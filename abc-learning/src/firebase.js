@@ -1,8 +1,7 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import {initializeApp} from 'firebase/app';
+import {collection, getDocs, getFirestore, addDoc, deleteDoc, doc} from 'firebase/firestore/lite';
+// Follow this pattern to import other Firebase services
+
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -16,6 +15,41 @@ const firebaseConfig = {
     measurementId: "G-YK137N1Y9P"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const db = getFirestore(app);
+
+export async function getCollection(collectionName) {
+    const collectionReference = collection(db, collectionName);
+    const snapshot = await getDocs(collectionReference);
+    return snapshot.docs.map(doc => doc.data());
+}
+
+export async function addToCollection(collectionName, data) {
+    // Add a new document with a generated id.
+    const myCollection = collection(db, collectionName);
+    await addDoc(myCollection, data);
+}
+
+export async function removeCollection(collectionName) {
+    let Ids = []
+
+    const querySnapshot = await getDocs(collection(db, collectionName));
+    querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        // let thing = doc(db, collectionName, doc.id)
+        Ids.push(doc.id)
+        // console.log(doc.id, " => ", doc.data());
+    });
+
+    for (let i = 0; i < Ids.length; i++) {
+        await deleteDoc(doc(db, collectionName, Ids[i]));
+    }
+    let check = await getCollection(collectionName)
+    do{
+        await sleep(100)
+    }while (check.length > 0)
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
