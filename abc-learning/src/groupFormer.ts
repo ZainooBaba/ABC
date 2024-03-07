@@ -1,6 +1,7 @@
 import { student, mentor } from './csvReader';
 
 export type classroom = {
+
     students: student[];
     mentors: mentor[];
 };

@@ -7,7 +7,7 @@ export type student = {
     Lastname: string;
     id: number;
     age: number;
-    //TODO: Fill out the rest of properties
+    //TODO: Fill out the rest of properties ASAP
 };
 
 export type mentor = {
@@ -15,7 +15,7 @@ export type mentor = {
     Lastname: string;
     id: number;
     age: number;
-    //TODO: Fill out the rest of properties
+    //TODO: Fill out the rest of properties ASAP
 };
 
 export function isStudentData(csvFile) {
