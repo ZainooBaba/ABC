@@ -1,8 +1,9 @@
 import { classroom } from './groupFormer';
-import {getCollection, addToCollection, removeCollection} from './firebase';
+import { getCollection, addToCollection, removeCollection } from './firebase';
+import { addDoc, getFirestore } from 'firebase/firestore/lite';
 
-//TODO 2 upload the data to the server. use the functions from firebase.js and check the firestore console to see
-// if the data is uploaded Feel
+// TODO 2 upload the data to the server. use the functions from firebase.js and check the firestore console to see if the data is uploaded
+
 
 const classroomData: classroom = {
     students: [
@@ -38,17 +39,23 @@ const classroomData: classroom = {
           // Add other properties as needed
       }
       // Add more mentors as needed
-      ]
+    ]
   };
 
 let myClassroom : classroom 
 
-export function uploadClassroomData(data: classroom ) : boolean {
-    //return true if the data is uploaded successfully idealy each classroom would be its own collection
-    //or something like that. Experminet around and try to think of a omptimum solution.
-    return true;
-}
+export function uploadClassroomData(data: classroom ): boolean {
+    // return true if the data is uploaded successfully idealy each classroom would be its own collection or something like that. Experminet around and try to think of an optimum solution.
 
-export function uploadClassroomData2() {
-    return uploadClassroomData(classroomData);
+    const classroomCollection = getCollection("classroom");
+    
+    data.students.forEach(async (student) => {
+        await addToCollection(classroomCollection, student);
+    });
+    data.students.forEach(async (mentor) => {
+        await addToCollection(classroomCollection, mentor);
+    });
+
+    console.log("Data upload successful")
+    return true;
 }
