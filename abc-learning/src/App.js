@@ -1,17 +1,24 @@
 import './App.css';
-import { uploadClasroomData } from './DataUploader';
-import {classroom} from './groupFormer';
+import {useState} from "react";
 
 function App() {
+  const [file, setFile] = useState()
+  function handleChange(event) {
+    setFile(event.target.files[0])
+  }
 
-  const test = () => {
-    uploadClasroomData(classroomData)
-  };
+
+  const uploadFile = () => {
+    console.log(file)
+    }
 
     return (
     <div className="App">
-      <button onClick={test}>
-      </button>
+        <header className="App-header">
+            <h1>ABC Learning</h1>
+    </header>
+           <input type={"file"} onChange={handleChange}/>
+      <button onClick={uploadFile}>Upload</button>
     </div>
   );
 }

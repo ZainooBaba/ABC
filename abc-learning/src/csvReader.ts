@@ -21,17 +21,11 @@ export type mentor = {
 };
 
 export function isStudentData(csvFile) {
-    if (!csvFile.endsWith('.csv')) {
-        throw new Error('not a CSV');
-    }
     //TODO throw an error if the file is not a csv file
     //TODO return true if thee csv file is for student data false if its mentor data.
     //Use somethnig related to the file data not the file name
 }
 export function getStudentData(csvFile) {
-    if (!csvFile.endsWith('.csv')) {
-        throw new Error('not a CSV');
-    }
     //TODO throw an error if the file is not a csv file
     //TODO return the student data in the form of an array of objects
     let data : student[] = [];
@@ -39,11 +33,9 @@ export function getStudentData(csvFile) {
 }
 
 export function getMentorData(csvFile) {
-    if (!csvFile.endsWith('.csv')) {
-        throw new Error('not a CSV');
-    }
     //TODO throw an error if the file is not a csv file
     //TODO return the mentor data in the form of an array of objects
     let data : mentor[] = [];
     return data;
 }
+
