@@ -32,15 +32,10 @@ export async function addToCollection(collectionName, data) {
 
 export async function removeCollection(collectionName) {
     let Ids = []
-
     const querySnapshot = await getDocs(collection(db, collectionName));
     querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        // let thing = doc(db, collectionName, doc.id)
         Ids.push(doc.id)
-        // console.log(doc.id, " => ", doc.data());
     });
-
     for (let i = 0; i < Ids.length; i++) {
         await deleteDoc(doc(db, collectionName, Ids[i]));
     }
