@@ -1,4 +1,4 @@
-import { addToCollection, removeCollection } from './firebase.js';
+import {addToCollection, removeCollection} from './firebase.js';
 
 enum AgeGroup {
     kid = "8 - 12",
@@ -48,6 +48,7 @@ function isStudentData(csvFile: File): boolean {
     return csvFile.name.includes("Student");
 }
 
+//TODO fix when commas are in fields
 function readCSV(file: File | null): Promise<string[][]> {
     return new Promise((resolve, reject) => {
         if (file === null) {
@@ -116,20 +117,18 @@ async function getStudentData(csvFile): Promise<[student[], any[]]> {
     let students: student[] = [];
     let incorrect: any[] = [];
     for (let i = 1; i < data.length; i++) {
-        
-        console.log(data[i])
         let flag = false;
-        for(let j = 1; j < data[i].length; j++){
-            if(data[i][j] == ""){
+        for (let j = 1; j < data[i].length; j++) {
+            if (data[i][j] == "") {
                 incorrect.push(data[i])
                 flag = true
                 break
             }
         }
-        if (flag){
+        if (flag) {
             continue
         }
-    
+
         let student: student = {
             firstName: data[i][1].valueOf(),
             lastName: data[i][2].valueOf(),
@@ -146,29 +145,27 @@ async function getStudentData(csvFile): Promise<[student[], any[]]> {
     return [students, incorrect];
 }
 
-async function getMentorData(csvFile): Promise<[mentor[], any[]]>  {
+async function getMentorData(csvFile): Promise<[mentor[], any[]]> {
     let data = await readCSV(csvFile);
     let mentors: mentor[] = [];
     let incorrect: any[] = [];
     for (let i = 1; i < data.length; i++) {
-        
-        console.log(data[i])
         let flag = false;
-        for(let j = 1; j < data[i].length; j++){
-            if(data[i][j] == ""){
+        for (let j = 1; j < data[i].length; j++) {
+            if (data[i][j] == "") {
                 incorrect.push(data[i])
                 flag = true
                 break
             }
         }
-        if (flag){
+        if (flag) {
             continue
         }
         let mentor: mentor = {
             emailAddress: data[i][1].valueOf(),
             firstName: data[i][3].valueOf(),
             lastName: data[i][4].valueOf(),
-            ageGroup: parseAgeGroup(data[i][5].valueOf()), 
+            ageGroup: parseAgeGroup(data[i][5].valueOf()),
             phoneNum: data[i][6].valueOf(),
             nativeLang: parseNativeLang(data[i][7].valueOf()),
             country: data[i][8].valueOf(),
@@ -178,17 +175,17 @@ async function getMentorData(csvFile): Promise<[mentor[], any[]]>  {
             parentHelp: parseParentHelp("Yes")
         };
         mentors.push(mentor);
-    
+
     }
     return [mentors, incorrect];
 }
 
 export async function uploadData(data: File) {
-    if (data == null){
+    if (data == null) {
         return false;
     }
     if (isStudentData(data)) {
-        let studentsData = await getStudentData(data)[0];
+        let studentsData = await getStudentData(data);
         let students = studentsData[0]
         students.forEach(async (student) => {
             await addToCollection("Students", student);
@@ -196,7 +193,7 @@ export async function uploadData(data: File) {
     } else {
         let mentorsData = await getMentorData(data);
         let mentors = mentorsData[0]
-    
+
         mentors.forEach(async (mentor) => {
             await addToCollection("Mentors", mentor);
         });
@@ -205,10 +202,10 @@ export async function uploadData(data: File) {
 
 export async function removeStudentData() {
     await removeCollection("Students");
-    }
-    
-    export async function removeMentorData() {
+}
+
+export async function removeMentorData() {
     await removeCollection("Mentors");
-    }
+}
 
 
